@@ -7,7 +7,6 @@ This is a cellular-automation-based fluid simulation. It was based on [this arti
 An executable jar file is available under the out/artifacts/ folder.
 
 ## Controls
-
 ### Placing and removing stuff
 
 * Left click to add water in a cell
@@ -18,4 +17,4 @@ An executable jar file is available under the out/artifacts/ folder.
 ### Simulation
 
 * Press `space` to launch the simulation
-* Press any other key (not `r`and `space`) to go forward only one step
+* Press any other key (not `r` nor `space`) to go forward only one step

@@ -17,7 +17,6 @@ hs_err_pid*
 # IntelliJ project files
 .idea
 *.iml
-out
 gen### Windows template
 # Windows image file caches
 Thumbs.db
@@ -37,4 +36,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-

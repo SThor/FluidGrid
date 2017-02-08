@@ -7,10 +7,14 @@ import java.util.List;
  * Created by silmathoron on 31/01/2017.
  */
 public class WaterCell extends Cell {
-	public final static double MAX_VOLUME = 100;
-	private static final double PRECISION = 0.001;
+	public final static double BASE_VOLUME = 100;
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
+	private static final double PRECISION = 0.001;
+	private static final double PRESSURE_DIFFERENCE = 0.1;
+	private static final double FLOW_DOWN_UNDER_PRESSURE = 0.08;
+	private static final double FLOW_UP_UNDER_PRESSURE = 0.08;
+
 	private double waterVolume;
 	private double nextTickWaterVolume;
 	private boolean falling = false;
@@ -42,10 +46,10 @@ public class WaterCell extends Cell {
 	}
 
 	private void tryOverFlowing() {
-		if (waterVolume > MAX_VOLUME && upCell instanceof WaterCell) {
+		if (waterVolume > BASE_VOLUME && upCell instanceof WaterCell) {
 			WaterCell upWaterCell = (WaterCell) upCell;
-			if (upWaterCell.waterVolume < waterVolume) {
-				double transferedVolume = waterVolume - MAX_VOLUME;
+			if (upWaterCell.waterVolume * (1 + PRESSURE_DIFFERENCE) <= waterVolume) {
+				double transferedVolume = waterVolume * FLOW_UP_UNDER_PRESSURE; //TODO modifier pour avoir une fontaine
 
 				WaterCell nextTickWaterCell = (WaterCell) nextTickCell;
 				WaterCell nextTickUpWaterCell = (WaterCell) nextTickUpCell;
@@ -53,6 +57,32 @@ public class WaterCell extends Cell {
 				flow(nextTickWaterCell, nextTickUpWaterCell, transferedVolume);
 			}
 		}
+	}
+
+	private boolean tryFlowingDown() {
+		boolean success = false;
+		if (waterVolume > 0 && downCell instanceof WaterCell) {
+			WaterCell downWaterCell = (WaterCell) downCell;
+			if (!downWaterCell.isFull()) {
+				double transferedVolume = Math.min(downWaterCell.getEmptyVolume(), waterVolume);
+
+				WaterCell nextTickWaterCell = (WaterCell) nextTickCell;
+				WaterCell nextTickDownWaterCell = (WaterCell) nextTickDownCell;
+				nextTickDownWaterCell.falling = true;
+
+				flow(nextTickWaterCell, nextTickDownWaterCell, transferedVolume);
+				success = true;
+			} else if (downWaterCell.waterVolume < (1 + PRESSURE_DIFFERENCE) * waterVolume) {
+				double transferedVolume = FLOW_DOWN_UNDER_PRESSURE * waterVolume;
+
+				WaterCell nextTickWaterCell = (WaterCell) nextTickCell;
+				WaterCell nextTickDownWaterCell = (WaterCell) nextTickDownCell;
+
+				flow(nextTickWaterCell, nextTickDownWaterCell, transferedVolume);
+				success = true;
+			}
+		}
+		return success;
 	}
 
 	private boolean tryFlowingSide() {
@@ -128,23 +158,6 @@ public class WaterCell extends Cell {
 		flow(nextTickWaterCell, nextTickSideWaterCell, transferedVolume);
 	}
 
-	private boolean tryFlowingDown() {
-		boolean success = false;
-		if (waterVolume > 0 && downCell instanceof WaterCell) {
-			WaterCell downWaterCell = (WaterCell) downCell;
-			if (!downWaterCell.isFull()) {
-				double transferedVolume = Math.min(downWaterCell.getEmptyVolume(), waterVolume);
-
-				WaterCell nextTickWaterCell = (WaterCell) nextTickCell;
-				WaterCell nextTickDownWaterCell = (WaterCell) nextTickDownCell;
-				nextTickDownWaterCell.falling = true;
-
-				flow(nextTickWaterCell, nextTickDownWaterCell, transferedVolume);
-				success = true;
-			}
-		}
-		return success;
-	}
 
 	private void flow(WaterCell startCell, WaterCell endCell, double transferedVolume) {
 		remove(transferedVolume);
@@ -175,7 +188,7 @@ public class WaterCell extends Cell {
 	}
 
 	public double getEmptyVolume() {
-		return MAX_VOLUME - waterVolume;
+		return BASE_VOLUME - waterVolume;
 	}
 
 	public boolean isFull() {
@@ -183,7 +196,7 @@ public class WaterCell extends Cell {
 	}
 
 	public boolean isFullyPressured() {
-		return MAX_VOLUME * 2 - waterVolume <= 0;
+		return BASE_VOLUME * 2 - waterVolume <= 0;
 	}
 
 	public double getWaterVolume() {
@@ -196,7 +209,7 @@ public class WaterCell extends Cell {
 	}
 
 	public double getPortionFilled() {
-		return waterVolume / MAX_VOLUME;
+		return waterVolume / BASE_VOLUME;
 	}
 
 	public float getPressure() {

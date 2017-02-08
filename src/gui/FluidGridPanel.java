@@ -44,8 +44,7 @@ public class FluidGridPanel extends JPanel {
 				if (e.getKeyChar() == ' ') {
 					startStop();
 				} else if (e.getKeyChar() == 'r') {
-					grid.reset(); //TODO
-					repaint();
+					reset();
 				} else {
 					step();
 				}
@@ -64,6 +63,11 @@ public class FluidGridPanel extends JPanel {
 				mouseDrag(e);
 			}
 		});
+	}
+
+	public void reset() {
+		grid.reset(); //TODO
+		repaint();
 	}
 
 	private void mousePress(MouseEvent e) {
@@ -144,12 +148,11 @@ public class FluidGridPanel extends JPanel {
 				} else {
 					int y = (int) (origin.y + (1 - waterCell.getPortionFilled()) * heightScale);
 					g2.fillRect(origin.x, y, (int) widthScale, (int) (heightScale * waterCell.getPortionFilled()) + 1);//+1 ?
-
-					if (debugDisplay) {
-						g2.setColor(Color.BLUE);
-						g2.setFont(new Font("Courier", Font.PLAIN, 8));
-						g2.drawString("[" + waterCell.getWaterVolume() + "]", origin.x + 2, origin.y + (int) heightScale - 1);
-					}
+				}
+				if (debugDisplay) {
+					g2.setColor(Color.BLACK);
+					g2.setFont(new Font("Courier", Font.PLAIN, 8));
+					g2.drawString("[" + waterCell.getWaterVolume() + "]", origin.x + 2, origin.y + (int) heightScale - 1);
 				}
 			} else if (cell instanceof Wall) {
 				g2.setColor(Color.BLACK);
@@ -169,7 +172,7 @@ public class FluidGridPanel extends JPanel {
 		return interpolate(WATER_COLOR_DARK, WATER_COLOR_CLEAR, cell.getPressure());
 	}
 
-	private void startStop() {
+	public void startStop() {
 		if (!running) {
 			running = true;
 			class Run implements Runnable {
@@ -190,7 +193,7 @@ public class FluidGridPanel extends JPanel {
 		}
 	}
 
-	private void step() {
+	public void step() {
 		grid.tick();
 		repaint();
 	}

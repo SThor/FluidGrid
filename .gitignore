@@ -38,3 +38,4 @@ $RECYCLE.BIN/
 *.lnk
 
 !/out/artifacts/FluidGrid_jar/
+!/out/artifacts/FluidGrid_jar/FluidGrid.jar

@@ -1,5 +1,7 @@
 package FluidGrid.cell;
 
+import FluidGrid.Settings;
+
 import java.awt.*;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public abstract class Cell {
 	protected Cell rightCell;
 	protected Cell upCell;
 	private Point coords;
+	private Settings settings;
 
 	public Cell(Point c) {
 		coords = c;

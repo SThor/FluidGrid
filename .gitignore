@@ -37,5 +37,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+!/out/artifacts/
 !/out/artifacts/FluidGrid_jar/
 !/out/artifacts/FluidGrid_jar/FluidGrid.jar

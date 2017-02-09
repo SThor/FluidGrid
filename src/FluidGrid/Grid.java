@@ -26,6 +26,7 @@ public class Grid {
 	}
 
 	public Grid() {
+		Settings.reset();
 		this.map = new HashMap<>();
 	}
 

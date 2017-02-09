@@ -16,6 +16,14 @@ public class Settings {
 	private static double flowDownUnderPressure;
 	private static double flowUpUnderPressure;
 
+	public static void reset(){
+		baseVolume = DEFAULT_BASE_VOLUME;
+		precision = DEFAULT_PRECISION;
+		pressureDifference = DEFAULT_PRESSURE_DIFFERENCE;
+		flowDownUnderPressure = DEFAULT_FLOW_DOWN_UNDER_PRESSURE;
+		flowUpUnderPressure = DEFAULT_FLOW_UP_UNDER_PRESSURE;
+	}
+
 	public static double getBaseVolume() {
 		return baseVolume;
 	}
